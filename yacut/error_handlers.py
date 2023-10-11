@@ -5,6 +5,7 @@ from . import app, db
 
 """Обработчики ошибок для HTML"""
 
+
 @app.errorhandler(404)
 def page_not_found(error):
 
@@ -19,6 +20,7 @@ def internal_error(error):
 
 
 """Обработчики ошибок для API"""
+
 
 class InvalidAPIUsage(Exception):
     status_code = 400

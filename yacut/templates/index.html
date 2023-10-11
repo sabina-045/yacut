@@ -37,7 +37,7 @@
             {{ form.submit (class="btn btn-primary") }}
           </form>
           <p class="py-3 mb-3">
-            {% with messages = get_flashed_messages() %}
+            {% with messages = get_flashed_messages(category_filter=['short_category']) %}
               {% if messages %}
                 {% for message in messages %}
                 <p><span style="color:red">{{ message }}</span></p>

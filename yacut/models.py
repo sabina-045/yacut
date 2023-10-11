@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from yacut import db
+from . import db
 from .constants import FIELDS, LOCALHOST
 
 
@@ -11,12 +11,14 @@ class URLMap(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     def to_dict(self):
+        """Сериализация"""
         return dict(
-            url = self.original,
-            short_link = LOCALHOST+self.short,
+            url=self.original,
+            short_link=LOCALHOST + self.short,
         )
 
     def from_dict(self, data_fields):
+        """Десериализация"""
         for field in FIELDS:
             if FIELDS[field] in data_fields:
                 data_field = FIELDS[field]

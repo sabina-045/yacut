@@ -4,7 +4,7 @@ from . import app, db
 
 from .models import URLMap
 from .forms import URLMapForm
-from .utils import get_unique_short
+from .utils import get_unique_short, check_unique_short
 from .constants import LOCALHOST
 
 
@@ -15,8 +15,10 @@ def index_view():
     if form.validate_on_submit():
         short = form.custom_id.data
         if short:
-            if URLMap.query.filter_by(short=short).first() is not None:
-                flash('Предложенный вариант короткой ссылки уже существует.', 'short_category')
+            unique_validation = check_unique_short(short)
+            if unique_validation:
+                flash('Предложенный вариант короткой ссылки уже существует.',
+                      'short_category')
                 return render_template('index.html', form=form)
             url = URLMap(
                 original=form.original_link.data,

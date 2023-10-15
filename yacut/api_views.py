@@ -19,7 +19,8 @@ def create_short_link():
             unique_short = get_unique_short()
             url_from_dict(url=url, data_fields={
                 'custom_id': unique_short, 'url': data['url']})
-        url_from_dict(url=url, data_fields=data)
+        else:
+            url_from_dict(url=url, data_fields=data)
 
         return jsonify(url_to_dict(url)), 201
 

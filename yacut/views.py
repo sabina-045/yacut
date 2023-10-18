@@ -1,10 +1,9 @@
 from flask import render_template, flash, redirect
 
-from . import app, db
-
+from . import app
 from .models import URLMap
 from .forms import URLMapForm
-from .utils import get_unique_short, check_unique_short
+from .service_views import create_unique_short, check_unique_short
 from .constants import LOCALHOST
 
 
@@ -20,24 +19,11 @@ def index_view():
                 flash('Предложенный вариант короткой ссылки уже существует.',
                       'short_category')
                 return render_template('index.html', form=form)
-            url = URLMap(
-                original=form.original_link.data,
-                short=short,
-            )
-            db.session.add(url)
-            db.session.commit()
-            return render_template(
-                'index.html',
-                form=form,
-                message='Ваша новая ссылка готова:',
-                link=LOCALHOST + url.short
-            ), 200
-        url = URLMap(
-            original=form.original_link.data,
-            short=get_unique_short(),
-        )
-        db.session.add(url)
-        db.session.commit()
+
+        url = URLMap(original=form.original_link.data,
+                     short=form.custom_id.data)
+        url = create_unique_short(url)
+
         return render_template(
             'index.html',
             form=form,

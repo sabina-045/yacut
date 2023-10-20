@@ -1,36 +1,51 @@
 from random import choices
 from string import ascii_letters, digits
+import re
 
 from . import db
-from .constants import AUTHO_SHORT_MAX_SIZE
+from .constants import (AUTHO_SHORT_MAX_SIZE, REGEX_URL,
+                        REGEX_SHORT, SHORT_MAX_SIZE)
 from .models import URLMap
-from .exceptions import InvalidValueError
+from .exceptions import (InvalidOriginalValueError, InvalidShortValueError,
+                         UniqueValueError)
 
 
-def create_unique_short(url):
+def create_unique_short(original, short):
     """Создание уникального короткого идентификатора из 6 символов
     (если его нет) и сохранение экз модели в бд"""
-    short = url.short
+    check_original_errors(original)
     if short:
-        unique_validation = check_unique_short(short)
-        if unique_validation:
-            raise InvalidValueError('Значение неуникально')
-        db.session.add(url)
-        db.session.commit()
-
-        return url
+        check_unique_short(short)
+        check_short_errors(short)
     else:
-        new_short = (''.join(choices(
+        short = (''.join(choices(
             ascii_letters + digits, k=AUTHO_SHORT_MAX_SIZE)))
-        url = URLMap(original=url.original, short=new_short)
-        db.session.add(url)
-        db.session.commit()
+        check_unique_short(short)
 
-        return url
+    url = URLMap(original=original, short=short)
+
+    db.session.add(url)
+    db.session.commit()
+
+    return url
 
 
 def check_unique_short(short):
-    """Проверка уникальности короткого идентиф."""
+    """Проверка уникальности short."""
     if URLMap.query.filter_by(short=short).first() is not None:
+        raise UniqueValueError('Значение неуникально')
 
-        return True
+
+def check_original_errors(original):
+    """Валидация original."""
+    if not re.match(REGEX_URL, original):
+        raise InvalidOriginalValueError('Введенные данные не похожи на URL')
+
+
+def check_short_errors(short):
+    """Валидация short."""
+    if (len(short) > SHORT_MAX_SIZE or
+            not re.match(REGEX_SHORT, short)):
+        raise InvalidShortValueError(
+            'Указано недопустимое имя для короткой ссылки'
+        )

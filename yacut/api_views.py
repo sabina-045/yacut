@@ -29,8 +29,7 @@ def create_short_link():
         raise InvalidAPIUsage(
             'Предложенный вариант короткой ссылки уже существует.'
         )
-    else:
-        return jsonify(url_to_dict(url)), 201
+    return jsonify(url_to_dict(url)), 201
 
 
 @app.route('/api/id/<path:short_id>/', methods=['GET'])

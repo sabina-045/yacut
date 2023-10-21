@@ -21,14 +21,13 @@ def index_view():
                   'short_category')
 
             return render_template('index.html', form=form)
-        else:
 
-            return render_template(
-                'index.html',
-                form=form,
-                message='Ваша новая ссылка готова:',
-                link=LOCALHOST + url.short
-            ), 200
+        return render_template(
+            'index.html',
+            form=form,
+            message='Ваша новая ссылка готова:',
+            link=LOCALHOST + url.short
+        ), 200
 
     return render_template('index.html', form=form)
 

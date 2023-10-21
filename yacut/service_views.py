@@ -20,7 +20,9 @@ def create_unique_short(original, short):
     else:
         short = (''.join(choices(
             ascii_letters + digits, k=AUTHO_SHORT_MAX_SIZE)))
-        check_unique_short(short)
+        while URLMap.query.filter_by(short=short).first() is not None:
+            short = (''.join(choices(
+                ascii_letters + digits, k=AUTHO_SHORT_MAX_SIZE)))
 
     url = URLMap(original=original, short=short)
 

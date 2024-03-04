@@ -1,28 +1,28 @@
 #### Yacut - сервис укорачивания ссылок.
 
-Клонировать репозиторий и перейти в него в командной строке:
+Клонируем репозиторий и переходим в него в командной строке:
 
 ```
-git clone 
+git clone git@github.com:sabina-045/yacut.git
 ```
 
 ```
 cd yacut
 ```
 
-Cоздать и активировать виртуальное окружение:
+Cоздаем и активируем виртуальное окружение:
 
 ```
 python3 -m venv venv
 ```
 
-* Если у вас Linux/macOS
+* Если у вас Linux/macOS:
 
     ```
     source venv/bin/activate
     ```
 
-* Если у вас windows
+* Если у вас windows:
 
     ```
     source venv/scripts/activate
@@ -31,9 +31,28 @@ python3 -m venv venv
 Установить зависимости из файла requirements.txt:
 
 ```
-python3 -m pip install --upgrade pip
+pip install -r requirements.txt
 ```
 
+Создаем репозиторий для миграций:
+
 ```
-pip install -r requirements.txt
+flask db init
+```
+
+Создаем миграцию:
+
+```
+flask db migrate -m "name of migration"
+```
+Применяем миграцию:
+
+```
+flask db upgrade
+```
+
+Запускаем приложение, набрав в терминале:
+
+```
+flask run
 ```
